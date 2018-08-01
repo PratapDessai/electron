@@ -209,11 +209,7 @@ void WebContentsPreferences::AppendCommandLineSwitches(
         ::switches::kEnableExperimentalWebPlatformFeatures);
 
   // Check if we have node integration specified.
-  bool enable_node_integration = true;
-  auto* node_integration_value = preference_.FindKeyOfType(
-      options::kNodeIntegration, base::Value::Type::BOOLEAN);
-  if (node_integration_value)
-    enable_node_integration = node_integration_value->GetBool();
+  bool enable_node_integration = IsEnabled(options::kNodeIntegration, true);
   command_line->AppendSwitchASCII(switches::kNodeIntegration,
                                   enable_node_integration ? "true" : "false");
 
@@ -223,11 +219,7 @@ void WebContentsPreferences::AppendCommandLineSwitches(
 
   // Check if webview tag creation is enabled, default to nodeIntegration value.
   // TODO(kevinsawicki): Default to false in 2.0
-  bool webview_tag = enable_node_integration;
-  auto* webview_tag_value = preference_.FindKeyOfType(
-      options::kWebviewTag, base::Value::Type::BOOLEAN);
-  if (webview_tag_value)
-    webview_tag = webview_tag_value->GetBool();
+  bool webview_tag = IsEnabled(options::kWebviewTag, enable_node_integration);
   command_line->AppendSwitchASCII(switches::kWebviewTag,
                                   webview_tag ? "true" : "false");
 
